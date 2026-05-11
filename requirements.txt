@@ -1,0 +1,8 @@
+litellm==1.80.0
+chromadb==0.5.23
+streamlit==1.41.0
+pymupdf==1.25.3
+sentence-transformers==3.3.1
+python-dotenv==1.2.2
+beautifulsoup4==4.14.3
+requests==2.33.1

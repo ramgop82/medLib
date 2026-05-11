@@ -1,0 +1,27 @@
+# Virtual environments
+venv/
+.venv/
+
+# Environment variables (secrets)
+.env
+
+# Cache
+cache/
+
+# Large/unused data files
+data/OpenHomeopath.sql
+data/Ashtank_Hirdaya.txt
+data/Charaka_Samhita_Text_with_English_Tanslation_-_P.V._Sharma.pdf
+
+# Unused folders
+medical_lookup/
+
+# Python
+__pycache__/
+*.pyc
+
+# Vector store (too large for git, rebuild with ingest)
+vectorstore/
+
+# OS files
+.DS_Store
