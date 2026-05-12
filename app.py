@@ -4,7 +4,7 @@ Streamlit UI for Homeopathy RAG Application with conversational follow-up.
 
 import streamlit as st
 from src.remedy_finder import find_remedy
-from src.followup import get_followup_questions, is_symptoms_sufficient
+from src.followup import get_followup_questions
 from src.cache import get_cached_result, save_to_cache
 
 
@@ -62,7 +62,7 @@ if user_input:
     input_lower = user_input.lower()
     is_valid = any(word in input_lower for word in symptom_words)
 
-    if not is_valid:
+    if not is_valid and not st.session_state.ready_for_remedy:
         with st.chat_message("assistant"):
             msg = "⚠️ Please provide valid medical symptoms (e.g., headache, fever, cough, stomach pain) so I can help you find a remedy."
             st.markdown(msg)
@@ -74,30 +74,21 @@ if user_input:
         # Check if we have enough info
         with st.chat_message("assistant"):
             if st.session_state.ready_for_remedy:
-                # User answered follow-up, validate before finding remedy
+                # User answered follow-up — go straight to finding remedy
                 symptoms = st.session_state.all_symptoms.strip()
-                sufficient, followup = get_followup_questions(symptoms)
+                with st.spinner("Searching books for remedy..."):
+                    cached = get_cached_result(symptoms, language)
+                    if cached:
+                        result = cached
+                    else:
+                        result = find_remedy(symptoms, language=language, system=system_key)
+                        save_to_cache(symptoms, language, result)
 
-                if followup == "INVALID":
-                    result = "Please provide valid medical symptoms so I can help you find a remedy."
                     st.markdown(result)
                     st.session_state.messages.append({"role": "assistant", "content": result})
-                    st.session_state.ready_for_remedy = False
-                    st.session_state.all_symptoms = ""
-                else:
-                    with st.spinner("Searching books for remedy..."):
-                        cached = get_cached_result(symptoms, language)
-                        if cached:
-                            result = cached
-                        else:
-                            result = find_remedy(symptoms, language=language, system=system_key)
-                            save_to_cache(symptoms, language, result)
 
-                        st.markdown(result)
-                        st.session_state.messages.append({"role": "assistant", "content": result})
-
-                    st.session_state.ready_for_remedy = False
-                    st.session_state.all_symptoms = ""
+                st.session_state.ready_for_remedy = False
+                st.session_state.all_symptoms = ""
 
             else:
                 # Check if symptoms are detailed enough
