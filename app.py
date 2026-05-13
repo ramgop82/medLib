@@ -2,10 +2,18 @@
 Streamlit UI for Homeopathy RAG Application with conversational follow-up.
 """
 
+import os
 import streamlit as st
 from src.remedy_finder import find_remedy
 from src.followup import get_followup_questions
 from src.cache import get_cached_result, save_to_cache
+
+# Auto-build vector store if it doesn't exist
+vectorstore_path = os.path.join(os.path.dirname(__file__), "vectorstore")
+if not os.path.exists(vectorstore_path) or not os.listdir(vectorstore_path):
+    with st.spinner("First-time setup: building knowledge base..."):
+        from src.ingest import build_vectorstore
+        build_vectorstore()
 
 
 st.set_page_config(page_title="Homeopathy Assistant", page_icon="🌿", layout="wide")
