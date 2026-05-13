@@ -20,6 +20,8 @@ st.set_page_config(page_title="Homeopathy Assistant", page_icon="🌿", layout="
 
 st.title("🌿 Homeopathy Assistant")
 st.subheader("Find remedies from Boericke's Materia Medica & Organon of Medicine")
+
+st.warning("⚠️ **Disclaimer:** This tool is for educational and reference purposes only. It is NOT a substitute for professional medical advice. Always consult a qualified homeopathic practitioner before taking any medicine.")
 st.markdown("Describe your symptoms and the AI will ask follow-up questions before recommending a remedy.")
 
 st.divider()
