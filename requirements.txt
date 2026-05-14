@@ -5,3 +5,4 @@ pymupdf
 python-dotenv
 beautifulsoup4
 requests
+numpy<2.0
