@@ -6,7 +6,6 @@ Supports PDFs and text files.
 import os
 import glob
 import chromadb
-from chromadb.utils import embedding_functions
 
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
@@ -105,11 +104,8 @@ def build_vectorstore():
         print("No data to ingest!")
         return
 
-    # Build ChromaDB collection
+    # Build ChromaDB collection (uses default embedding - lightweight)
     client = chromadb.PersistentClient(path=VECTORSTORE_DIR)
-    embedding_fn = embedding_functions.SentenceTransformerEmbeddingFunction(
-        model_name="all-MiniLM-L6-v2"
-    )
 
     # Delete existing and recreate
     try:
@@ -117,10 +113,7 @@ def build_vectorstore():
     except Exception:
         pass
 
-    collection = client.create_collection(
-        name="homeopathy",
-        embedding_function=embedding_fn,
-    )
+    collection = client.create_collection(name="homeopathy")
 
     # Add chunks in batches
     batch_size = 100

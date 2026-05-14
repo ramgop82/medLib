@@ -2,7 +2,6 @@ litellm
 chromadb
 streamlit
 pymupdf
-sentence-transformers
 python-dotenv
 beautifulsoup4
 requests
